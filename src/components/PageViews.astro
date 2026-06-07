@@ -1,0 +1,25 @@
+---
+
+---
+<span id="page-views" aria-live="polite">阅读量：...</span>
+
+<script>
+    const el = document.querySelector('#page-views');
+
+    if (el) {
+        fetch('/api/page-view', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ path: window.location.pathname }),
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                if (typeof data.views === 'number') {
+                    el.textContent = `阅读量：${data.views}`;
+                }
+            })
+            .catch(() => {
+                el.textContent = '阅读量：--';
+            });
+    }
+</script>

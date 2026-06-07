@@ -1,6 +1,7 @@
 ---
 import { Badge } from '@astrojs/starlight/components';
 import DefaultPageTitle from '@astrojs/starlight/components/PageTitle.astro';
+import PageViews from "./PageViews.astro";
 
 const { entry } = Astro.locals.starlightRoute;
 const tags = entry.data.tags ?? [];
@@ -25,3 +26,5 @@ const tags = entry.data.tags ?? [];
 		</ul>
 	)
 }
+
+<PageViews />
