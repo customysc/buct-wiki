@@ -1,0 +1,3 @@
+[submodule "src/content/docs/content"]
+	path = src/content/docs/content
+	url = https://github.com/customysc/buct-wiki-content.git
