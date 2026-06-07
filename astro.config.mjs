@@ -9,10 +9,8 @@ export default defineConfig({
 			title: 'Buct Wiki',
 			// social: [{ icon: 'github', label: 'GitHub', href: 'https://github.com/withastro/starlight' }],
 			sidebar: [
-				{
-					label: '北化简介',
-					items: [{ autogenerate: { directory: 'introduction' } }],
-				},
+				{ label: '测试', slug: 'test' },
+				{ autogenerate: { directory: 'content' } },
 				// {
 				// 	label: 'Guides',
 				// 	items: [
