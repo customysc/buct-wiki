@@ -17,7 +17,9 @@ const tags = entry.data.tags ?? [];
 			{
 				tags.map((tag) => (
 				<li>
-					<Badge text={tag} size="small" />
+					<a href={`/tags/${encodeURIComponent(tag)}/`} style="text-decoration: none;">
+						<Badge text={tag} size="small" />
+					</a>
 				</li>
 			))}
 		</ul>

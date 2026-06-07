@@ -1,0 +1,52 @@
+---
+import StarlightPage from '@astrojs/starlight/components/StarlightPage.astro';
+import { getTagIndex } from '../../utils/tags';
+
+const tagIndex = await getTagIndex();
+---
+
+<StarlightPage frontmatter={{ title: '标签', description: '按标签浏览文章' }}>
+	<p>共有 {tagIndex.length} 个标签。</p>
+
+	<ul class="tag-list">
+		{
+			tagIndex.map(({ tag, slug, entries }) => (
+				<li>
+					<a href={`/tags/${slug}/`}>
+						<span>{tag}</span>
+						<span>{entries.length}</span>
+					</a>
+				</li>
+			))
+		}
+	</ul>
+</StarlightPage>
+
+<style>
+	.tag-list {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.75rem;
+		padding: 0;
+		list-style: none;
+	}
+
+	.tag-list a {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.5rem;
+		border: 1px solid var(--sl-color-gray-5);
+		border-radius: 0.25rem;
+		padding: 0.35rem 0.55rem;
+		text-decoration: none;
+	}
+
+	.tag-list a:hover {
+		border-color: var(--sl-color-accent);
+	}
+
+	.tag-list span:last-child {
+		color: var(--sl-color-gray-3);
+		font-size: var(--sl-text-sm);
+	}
+</style>

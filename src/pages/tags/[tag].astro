@@ -1,0 +1,39 @@
+---
+import StarlightPage from '@astrojs/starlight/components/StarlightPage.astro';
+import { getDocUrl, getTagIndex, type TagIndexItem } from '../../utils/tags';
+
+export async function getStaticPaths() {
+	const tagIndex = await getTagIndex();
+
+	return tagIndex.map((item) => ({
+		params: { tag: item.slug },
+		props: { item },
+	}));
+}
+
+interface Props {
+	item: TagIndexItem;
+}
+
+const { item } = Astro.props;
+---
+
+<StarlightPage
+	frontmatter={{
+		title: `标签：${item.tag}`,
+		description: `带有“${item.tag}”标签的文章列表`,
+	}}
+>
+	<p>共有 {item.entries.length} 篇文章。</p>
+
+	<ul class="article-list">
+		{
+			item.entries.map((entry) => (
+				<li style="border-bottom: 1px solid var(--sl-color-hairline);">
+					<a href={getDocUrl(entry)}>{entry.data.title}</a>
+					{entry.data.description && <p>{entry.data.description}</p>}
+				</li>
+			))
+		}
+	</ul>
+</StarlightPage>
