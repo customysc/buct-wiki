@@ -7,7 +7,7 @@
     const el = document.querySelector('#page-views');
 
     if (el) {
-        fetch('/api/page-view', {
+        fetch('/api/page-views', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ path: window.location.pathname }),
