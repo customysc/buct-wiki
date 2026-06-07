@@ -1,2 +1,7 @@
 name = "buct-wiki"
 pages_build_output_dir = "./dist"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "buct-wiki"
+database_id = "bc1801d0-22a6-43f4-881f-b48af791599f"
