@@ -7,40 +7,54 @@ interface PageViewRequest {
 }
 
 export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
-    let body: PageViewRequest;
+	try {
+		if (!env.DB) {
+			return Response.json({ error: 'D1 binding DB is missing' }, { status: 500 });
+		}
 
-    try {
-        body = await request.json();
-    } catch {
-        return Response.json({ error: 'Invalid JSON' }, { status: 400 });
-    }
+		let body: PageViewRequest;
 
-    const path = normalizePath(body.path);
+		try {
+			body = await request.json();
+		} catch {
+			return Response.json({ error: 'Invalid JSON' }, { status: 400 });
+		}
 
-    if (!path) {
-        return Response.json({ error: 'Invalid path' }, { status: 400 });
-    }
+		const path = normalizePath(body.path);
 
-    await env.DB.prepare(`
-		INSERT INTO page_views (path, views, updated_at)
-		VALUES (?, 1, datetime('now'))
-		ON CONFLICT(path) DO UPDATE SET
-			views = views + 1,
-			updated_at = datetime('now')
-	`)
-        .bind(path)
-        .run();
+		if (!path) {
+			return Response.json({ error: 'Invalid path' }, { status: 400 });
+		}
 
-    const row = await env.DB.prepare(`
-		SELECT views FROM page_views WHERE path = ?
-	`)
-        .bind(path)
-        .first<{ views: number }>();
+		await env.DB.prepare(`
+			INSERT INTO page_views (path, views, updated_at)
+			VALUES (?, 1, datetime('now'))
+			ON CONFLICT(path) DO UPDATE SET
+				views = views + 1,
+				updated_at = datetime('now')
+		`)
+			.bind(path)
+			.run();
 
-    return Response.json({
-        path,
-        views: row?.views ?? 0,
-    });
+		const row = await env.DB.prepare(`
+			SELECT views FROM page_views WHERE path = ?
+		`)
+			.bind(path)
+			.first<{ views: number }>();
+
+		return Response.json({
+			path,
+			views: row?.views ?? 0,
+		});
+	} catch (error) {
+		return Response.json(
+			{
+				error: 'Page view function failed',
+				message: error instanceof Error ? error.message : String(error),
+			},
+			{ status: 500 }
+		);
+	}
 };
 
 function normalizePath(value: unknown) {
